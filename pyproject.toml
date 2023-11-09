@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "django-faked-models"
+version = "0.1.0"
+description = ""
+authors = ["Maurice von Loesch <github@weltenseglr.de>"]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+exclude = [
+    "src/fake_model/tests.py",
+    "manage.py",
+    ".env",
+    ".pytest_cache"
+]
+
+packages = [
+    { include = "src/fake_model" }
+]
+
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+django = ">=3.2"
+
+[tool.poetry.dev-dependencies]
+pytest-django = "~4.7"
+dj-config-url = "~0.1.1"
+python-decouple = "~3.8"
+psycopg2-binary = ">=2.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.distutils.bdist_wheel]
+universal = true
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = 'demo.settings'
+python_files = [
+    "test_*.py",
+    "*_tests.py",
+    "check_*.py",
+    "example_*.py",
+    "tests.py"
+]
+django_debug_mode = true
+addopts = [
+    "--ignore-glob=**/integration/*",
+    "--ignore-glob=**/tests/*",
+    "--ignore-glob=**/dist/*",
+    "--ignore-glob=**/build/*",
+    #    "--cov=.",  # option to include converage (breaks pycharm debugging mode)
+]
+
+[tool.coverage.run]
+#include = ["*"]
+omit = [
+    "*apps.py",
+    "*/migrations/*",
+    "*settings.py",
+    "*/tests/*",
+    "*urls.py",
+    "*asgi/*",
+    "*wsgi/*",
+    "manage.py",
+    ".venv/*",
+    "build/*",
+    "dist/*",
+    "*/.pytest_cache/*",
+]
