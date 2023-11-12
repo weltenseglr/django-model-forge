@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "django-faked-models"
+name = "django-model-forge"
 version = "0.1.0"
-description = ""
+description = "A django application that allows you to create, migrate and use models at runtime."
 authors = ["Maurice von Loesch <github@weltenseglr.de>"]
 readme = "README.md"
 classifiers = [
@@ -10,14 +10,14 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 exclude = [
-    "src/fake_model/tests.py",
+    "src/model_forge/tests.py",
     "manage.py",
     ".env",
     ".pytest_cache"
 ]
 
 packages = [
-    { include = "src/fake_model" }
+    { include = "src/model_forge" }
 ]
 
 
@@ -26,7 +26,7 @@ python = ">=3.9"
 django = ">=3.2"
 
 [tool.poetry.dev-dependencies]
-pytest-django = "~4.7"
+pytest-django = {extras = ["pytest"], version = "^4.7.0"}
 dj-config-url = "~0.1.1"
 python-decouple = "~3.8"
 psycopg2-binary = ">=2.9"

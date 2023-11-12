@@ -3,7 +3,7 @@ from typing import Type
 from django.db import models
 import pytest
 
-import fake_model
+import model_forge
 
 
 pytestmark = pytest.mark.django_db
@@ -15,18 +15,18 @@ def django_db_setup(django_db_setup, django_db_blocker):
     django_db_blocker.unblock()
 
 
-class TestFakedModel:
+class TestForgedModel:
 
     @pytest.fixture(scope='class')
     def virtual_user(self) -> Type[models.Model]:
-        @fake_model.register
+        @model_forge.reforge
         class VirtualUser(models.Model):
             alias = models.CharField(max_length=16, null=False, unique=True)
             email = models.EmailField(null=False, unique=True)
 
         return VirtualUser
 
-    def test_model_creation(self, virtual_user):
+    def test_type(self, virtual_user):
         assert issubclass(virtual_user, models.Model)
 
     def test_virtual_user_create(self, virtual_user):
@@ -35,8 +35,23 @@ class TestFakedModel:
         assert user.email == "test@domain.org"
         assert virtual_user.objects.filter(alias="test").count() == 1
 
+    def test_forge(self):
+        VirtualUser2 = model_forge.forge(
+            'VirtualUser2',
+            fields={
+                'alias': models.CharField(max_length=16, null=False, unique=True),
+                'email': models.EmailField(null=False, unique=True)
+            },
 
-class TestFakedModelRelation:
+        )
+        assert issubclass(VirtualUser2, models.Model)
+        user, _ = VirtualUser2.objects.update_or_create(email='test2@domain.com', alias='testERR')
+        assert isinstance(user, VirtualUser2)
+        assert user.email == 'test2@domain.com'
+        assert VirtualUser2.objects.filter(email=user.email).count() == 1
+
+
+class TestForgedModelRelation:
 
     @pytest.fixture
     def authors(self):
@@ -63,7 +78,7 @@ class TestFakedModelRelation:
 
     @pytest.fixture(scope='class')
     def fake_author(self):
-        @fake_model.register
+        @model_forge.reforge
         class FakeAuthor(models.Model):
             name = models.CharField(max_length=32, unique=True)
 
@@ -71,7 +86,7 @@ class TestFakedModelRelation:
 
     @pytest.fixture(scope='class')
     def fake_book(self, fake_author):
-        @fake_model.register
+        @model_forge.reforge
         class FakeBook(models.Model):
             author = models.ForeignKey(fake_author, on_delete=models.CASCADE, related_name='books')
             title = models.CharField(null=False, blank=False, max_length=128)

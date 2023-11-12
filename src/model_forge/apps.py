@@ -1,9 +1,9 @@
 from django.apps import AppConfig, apps
 
 
-class FakeModelConfig(AppConfig):
-    name = 'fake_model'
-    app_label = 'faked'
+class ModelForgeConfig(AppConfig):
+    name = 'model_forge'
+    app_label = 'model_forge'
 
     @classmethod
     def ensure_ready(cls):
