@@ -42,7 +42,8 @@ def test_my_model(my_model):
     assert my_model.objects.filter(my_field=1).count() == 1
 ```
 
-### Using package
+### Using module __init__
+*untested*
 ```python
 """ `tests/__init__.py` """
 from django.db import models
@@ -69,7 +70,7 @@ class MyModel(models.Model):
 
 ```python
 """
-Create a new model and add it to `myapp`
+Create a new model and add it to `myapp`. As in the examples above, you must ensure your database is unblocked.
 """
 from django.db import models
 from myapp.models import MyModelMixin
